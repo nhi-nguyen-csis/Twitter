@@ -16,11 +16,29 @@ class LoginViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    // when the page shows up, what do you want Apple to do?
+    override func viewDidAppear(_ animated: Bool) {
+        //check the userDefaults
+        if UserDefaults.standard.bool(forKey: "userLoggedIn") == true {
+            //don't ask user log in again, run the segue immediately
+            self.performSegue(withIdentifier: "loginToHome", sender: self)
+        }
+    }
+    
+    
+    
+    
+    
     @IBAction func onLoginButton(_ sender: Any) {
         let myUrl: String = "https://api.twitter.com/oauth/request_token"
         TwitterAPICaller.client?.login(url: myUrl, success: {
-            //trigger the connection
-            // transition user from login view to home view
+            //trigger the connection when login success
+            //1 . allow user to stay login
+            //value = true --> when user login, value = true
+            //forKey = the name of the value
+            UserDefaults.standard.set(true, forKey: "userLoggedIn")
+            
+            // 2. transition user from login view to home view
             // perform segue
             // segue is a transition
             // withIdentifier is the name of our transition

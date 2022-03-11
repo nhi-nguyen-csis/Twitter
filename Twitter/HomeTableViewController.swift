@@ -23,6 +23,8 @@ class HomeTableViewController: UITableViewController {
         //completion: do you want to do anything when the screen is gone
         // no, we don't want anything happen
         self.dismiss(animated: true, completion: nil)
+        // false means the user log out, not log in
+        UserDefaults.standard.set(false, forKey: "userLoggedIn")
     }
     
 
