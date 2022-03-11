@@ -23,22 +23,25 @@ class HomeTableViewController: UITableViewController {
         super.viewDidLoad()
         
         //after the screen is done loading, call the loadTweet() to request API
-        loadTweet()
+        loadTweets()
         
         //target: where you want this happen: self = this screen
         //action: what do you want Apple to do?
-        myRefreshControll.addTarget(self, action: #selector(loadTweet), for: .valueChanged)
+        myRefreshControll.addTarget(self, action: #selector(loadTweets), for: .valueChanged)
         tableView.refreshControl = myRefreshControll
         
     }
     
     
     // func to call API
-    @objc func loadTweet(){
+    @objc func loadTweets(){
+        
+        numberOfTweet = 20
         let url = "https://api.twitter.com/1.1/statuses/home_timeline.json"
         // myParams to pass to the API to get exactly how many tweets you want
         // count is the API's parameter
-        let myParams = ["count": 20]
+        let myParams = ["count": numberOfTweet]
+        
         // call the API to get multiple tweets --> need to use getDictionariesRequest, instead of getDictionaryRequest (1 tweet only)
         TwitterAPICaller.client?.getDictionariesRequest(url: url, parameters: myParams, success:
         { (tweets: [NSDictionary]) in
@@ -61,7 +64,39 @@ class HomeTableViewController: UITableViewController {
     }
     
     
+    func loadMoreTweets(){
+        
+        let myUrl = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+        numberOfTweet = numberOfTweet + 20
+        let myParams = ["count": numberOfTweet]
+        
+        // call the API to get multiple tweets --> need to use getDictionariesRequest, instead of getDictionaryRequest (1 tweet only)
+        TwitterAPICaller.client?.getDictionariesRequest(url: myUrl, parameters: myParams, success:
+        { (tweets: [NSDictionary]) in
+            
+            self.tweetArray.removeAll()
+            for tweet in tweets {
+                self.tweetArray.append(tweet)
+            }
+            
+            // everytime we call API, we repopulate our list to reload the data with the new content
+            self.tableView.reloadData()
+            
+        }, failure: { Error in
+            print("Could not retrieve tweets! oh no!")
+        })
+        
+    }
     
+    
+    // when user scroll down and gets to the end of the table call the loadMoreTweets()
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row + 1 == tweetArray.count {
+            loadMoreTweets()
+        }
+    }
+    
+
     // this func is executed when users click on logout button
     @IBAction func onLogout(_ sender: UIBarButtonItem) {
         // logout the user
@@ -101,7 +136,7 @@ class HomeTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return 1 // our table has only 1 section
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
