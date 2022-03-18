@@ -17,13 +17,10 @@ class HomeTableViewController: UITableViewController {
     // add refresh control
     let myRefreshControll = UIRefreshControl()
     
-    
+    // viewDidLoad() only called once when the program first starts
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
-        //after the screen is done loading, call the loadTweet() to request API
-        loadTweets()
         
         //target: where you want this happen: self = this screen
         //action: what do you want Apple to do?
@@ -32,6 +29,12 @@ class HomeTableViewController: UITableViewController {
         
     }
     
+    // viewDidAppear get call multiple times whenever a view appears on the screen
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        //after the screen is done loading, call the loadTweet() to request API
+        loadTweets()
+    }
     
     // func to call API
     @objc func loadTweets(){
