@@ -26,7 +26,7 @@ class TwitterAPICaller: BDBOAuth1SessionManager {
     
     func login(url: String, success: @escaping () -> (), failure: @escaping (Error) -> ()){
         loginSuccess = success
-        loginFailure = failure
+        loginFaigit lure = failure
         TwitterAPICaller.client?.deauthorize()
         TwitterAPICaller.client?.fetchRequestToken(withPath: url, method: "GET", callbackURL: URL(string: "alamoTwitter://oauth"), scope: nil, success: { (requestToken: BDBOAuth1Credential!) -> Void in
             let url = URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken.token!)")!
@@ -99,6 +99,6 @@ class TwitterAPICaller: BDBOAuth1SessionManager {
         }, failure: { (task: URLSessionDataTask?, error: Error) in
             failure(error)
         })
-    } 
+    }
     
 }
