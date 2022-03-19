@@ -78,7 +78,7 @@ class HomeTableViewController: UITableViewController {
         let myParams = ["count": numberOfTweet]
         
         // call the API to get multiple tweets --> need to use getDictionariesRequest, instead of getDictionaryRequest (1 tweet only)
-        TwitterAPICaller.client?.getDictionariesRequest(url: myUrl, parameters: myParams, success:
+        TwitterAPICaller.client?.getDictionariesRequest(url: myUrl, parameters: myParams as [String : Any], success:
         { (tweets: [NSDictionary]) in
             
             self.tweetArray.removeAll()
@@ -117,10 +117,12 @@ class HomeTableViewController: UITableViewController {
         UserDefaults.standard.set(false, forKey: "userLoggedIn")
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView,
+                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // withIdentifier: name of the prototype cell
         // cast it as TweetCellTableViewCell
-        let cell = tableView.dequeueReusableCell(withIdentifier: "tweetCell", for: indexPath) as! TweetCellTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "tweetCell",
+                                                 for: indexPath) as! TweetCellTableViewCell
         
         //extract user name from API call
         //casting it to dictionary
@@ -140,6 +142,8 @@ class HomeTableViewController: UITableViewController {
         //check if the current tweet is favorite or not
         cell.setFavorite(tweetArray[indexPath.row]["favorited"] as! Bool)
         cell.tweetId = tweetArray[indexPath.row]["id"] as! Int
+        cell.setRetweeted(tweetArray[indexPath.row]["retweeted"] as! Bool)
+        
         return cell
     }
     
